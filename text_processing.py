@@ -1,7 +1,6 @@
 import torch
 from typing import List
 from torch.utils.data import Dataset, DataLoader
-from collections import Counter
 import re
 
 

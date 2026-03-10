@@ -18,9 +18,6 @@ class MultiHeadAttn(nn.Module):
         self.d_head = d_head
         self.d_key = self.d_model // self.d_head
 
-        self.vocab = {}
-        self.sequence_length = []
-
         self.embedding_fn = nn.Embedding(
             num_embeddings=num_embedding, embedding_dim=d_model)
 

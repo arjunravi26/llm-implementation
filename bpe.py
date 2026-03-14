@@ -1,3 +1,13 @@
+import torch
+from collections import Counter
+from typing import List
+
+
+class BPE:
+    def __init__(self):
+        pass
+
+
 if __name__ == "__main__":
     from core.calculate_seq_len import calculate_seq_len
     data = [

@@ -6,6 +6,8 @@ import re
 
 
 class TextProcessor(Dataset):
+    "Build Vocab and convert text -> token -> token_id"
+
     def __init__(self, seq_len=8, vocab_size=100):
         super().__init__()
         self.seq_len = seq_len

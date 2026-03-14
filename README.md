@@ -1,0 +1,2 @@
+# LLM Implementation
+This repository contains my implementation of core components of LLMs from scratch using PyTorch. The goal of this project is to deeply understand how transformers work internally by implementing each component manually.

@@ -1,38 +1,44 @@
 import torch
 from typing import List
 from torch.utils.data import Dataset, DataLoader
+from collections import Counter
 import re
 
 
 class TextProcessor(Dataset):
-    def __init__(self, seq_len=8):
+    def __init__(self, seq_len=8, vocab_size=100):
         super().__init__()
-        self.pad_token = "<PAD>"
-        self.unk_token = "<UNK"
         self.seq_len = seq_len
+        self.vocab_size = vocab_size
+        self.BOS = "<BOS>"
+        self.EOS = "<EOS>"
+        self.pad_token = "<PAD>"
+        self.unk_token = "<UNK>"
         self.token_to_id = {self.pad_token: 0, self.unk_token: 1}
         self.id_to_token = {0: self.pad_token, 1: self.unk_token}
 
     def normalize_text(self, text: str) -> str:
-        text = text.lower()
-        text = re.sub(r"[^\w\s]", "", text)
+        text = self.BOS + text.lower() + self.EOS
         return text
 
     def build_vocab(self, texts: List[str]):
+        counter = Counter()
         for text in texts:
-            tokens = self.tokenize(text)
-            for token in tokens:
-                if token not in self.token_to_id:
-                    self.token_to_id[token] = len(self.token_to_id)
-                    self.id_to_token[len(self.id_to_token)] = token
+            tokens = self.tokenize(text=text)
+            counter.update(tokens)
+        most_common = counter.most_common(self.vocab_size)
+        for token, _ in most_common:
+            if token not in self.token_to_id:
+                idx = len(self.token_to_id)
+                self.token_to_id[token] = idx
+                self.id_to_token[idx] = token
         print(f"Token to id: {self.token_to_id}")
         print(f"Id to token: {self.id_to_token}")
 
     def pad_or_truncate_ids(self, ids: List):
         if len(ids) < self.seq_len:
             pad_len = self.seq_len - len(ids)
-            padded_ids = [0] * pad_len
-            ids.extend(padded_ids)
+            ids = ids + [0] * pad_len
         elif len(ids) > self.seq_len:
             ids = ids[:self.seq_len]
         return ids
@@ -46,7 +52,7 @@ class TextProcessor(Dataset):
         for text in texts:
             tokens = self.tokenize(text=text)
             ids = self.pad_or_truncate_ids(
-                ids=[self.token_to_id[token] for token in tokens])
+                ids=[self.token_to_id.get(token, self.token_to_id[self.unk_token]) for token in tokens])
             token_ids.append(ids)
         return torch.tensor(token_ids)
 
@@ -70,3 +76,9 @@ if __name__ == "__main__":
     text_processor.build_vocab(texts=data)
     token_ids = text_processor.encode(texts=data)
     print(f"Token ids are: {token_ids}")
+
+    data1 = [
+        "Hello, My Name is Arjun."
+    ]
+    token_ids1 = text_processor.encode(texts=data1)
+    print(f"Token ids are: {token_ids1}")

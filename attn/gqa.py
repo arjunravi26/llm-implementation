@@ -71,8 +71,6 @@ class GQA(nn.Module):
 
     def forward(self, X):
         embeddings = self.embedding(X)
-        print(X.shape)
-        print(embeddings.shape)
         output = self.gqa(embeddings=embeddings)
         return output
 

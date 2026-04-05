@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
-
+from tokenizer.text_processing import TextProcessor
+from core.calculate_seq_len import calculate_seq_len
 
 class GQA(nn.Module):
     def __init__(self, d_model, query_head, key_head, num_embedding=1000):
@@ -70,5 +71,44 @@ class GQA(nn.Module):
 
     def forward(self, X):
         embeddings = self.embedding(X)
+        print(X.shape)
+        print(embeddings.shape)
         output = self.gqa(embeddings=embeddings)
         return output
+
+
+def process_text(text: str):
+    words = text.split()
+    word_dct = {word: idx for idx, word in enumerate(words)}
+    tokens = torch.tensor(list(word_dct.values()))
+    return words, tokens, word_dct
+
+
+
+if __name__ == "__main__":
+    data = [
+        "Hello, How are you?",
+        "What are you doing now?",
+        "The smell of fresh rain on dry earth is called petrichor.",
+        "Could you please pass the salt?",
+        "I'm planning to go for a long walk once the sun sets.",
+        "The old lighthouse stood as a silent sentinel against the crashing waves.",
+        "A flicker of doubt crossed his face, but he quickly masked it with a smile"
+    ]
+
+    seq_len = calculate_seq_len(texts=data)
+    print(f"Sequence length is {seq_len}")
+
+    text_processor = TextProcessor(seq_len=seq_len)
+    text_processor.build_vocab(texts=data)
+    token_ids = text_processor.encode(texts=data)
+    print(f"Token ids are: {token_ids}")
+
+    data1 = [
+        "Hello, My Name is Arjun."
+    ]
+    token_ids1 = text_processor.encode(texts=data1)
+    print(f"Token ids are: {token_ids1}")
+    gqa = GQA(d_model=512,query_head=8,key_head=2)
+    context_vector = gqa(token_ids)
+    print(f"Context vector: {context_vector}")

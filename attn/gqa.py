@@ -32,9 +32,9 @@ class GQA(nn.Module):
 
     def gqa(self, embeddings):
 
-        key = self.Wkey(embeddings)
-        value = self.Wvalue(embeddings)
-        query = self.Wquery(embeddings)
+        key: torch.Tensor = self.Wkey(embeddings)
+        value: torch.Tensor = self.Wvalue(embeddings)
+        query: torch.Tensor = self.Wquery(embeddings)
 
         B, S, _ = key.shape
 
@@ -44,16 +44,25 @@ class GQA(nn.Module):
 
         group_size = self.query_head // self.key_head
 
-        key = key.repeat_interleave(group_size, dim=1)
-        value = value.repeat_interleave(group_size, dim=1)
+        # key = key.repeat_interleave(group_size, dim=1)
+        # value = value.repeat_interleave(group_size, dim=1)
 
+        key = key.unsqueeze(2)
+        value = value.unsqueeze(2)
+
+        key = key.expand(B, self.key_head, group_size, S, self.d_key)
+        value = value.expand(B, self.key_head, group_size, S, self.d_key)
+
+        key = key.reshape(B,self.query_head,S,self.d_key)
+        value = value.expand(B, self.query_head, S, self.d_key)
+        
         attn_score = query @ key.transpose(-1, -2)
         attn_normalized = attn_score / math.sqrt(self.d_key)
         attn_weights = F.softmax(attn_normalized, dim=-1)
 
         context_vector = attn_weights @ value
 
-        context_vector = context_vector.transpose(1,2).contiguous()
+        context_vector = context_vector.transpose(1, 2).contiguous()
 
         context_vector = context_vector.view(B, S, self.d_model)
 

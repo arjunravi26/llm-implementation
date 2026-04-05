@@ -9,7 +9,7 @@ class GQA(nn.Module):
         super().__init__()
         assert d_model % query_head == 0, "`query_head` must be the factor of `d_model`"
         assert d_model % key_head == 0, "`key_head` must be the factor of `d_model`"
-        assert self.query_head % self.key_head == 0, "`query_head` must be the factor of `key_head`"
+        assert query_head % key_head == 0, "`query_head` must be the factor of `key_head`"
 
         self.d_model = d_model
         self.query_head = query_head
@@ -54,8 +54,8 @@ class GQA(nn.Module):
         value = value.expand(B, self.key_head, group_size, S, self.d_key)
 
         key = key.reshape(B,self.query_head,S,self.d_key)
-        value = value.expand(B, self.query_head, S, self.d_key)
-        
+        value = value.reshape(B, self.query_head, S, self.d_key)
+
         attn_score = query @ key.transpose(-1, -2)
         attn_normalized = attn_score / math.sqrt(self.d_key)
         attn_weights = F.softmax(attn_normalized, dim=-1)

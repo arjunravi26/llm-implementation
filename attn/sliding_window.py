@@ -6,7 +6,7 @@ from tokenizer.text_processing import TextProcessor
 from core.calculate_seq_len import calculate_seq_len
 
 
-class GQA(nn.Module):
+class SlidingWindowAttn(nn.Module):
     def __init__(self, d_model, query_head, key_head, window_size=3, num_embedding=1000):
         super().__init__()
         assert d_model % query_head == 0, "`query_head` must be the factor of `d_model`"
@@ -114,6 +114,6 @@ if __name__ == "__main__":
     ]
     token_ids1 = text_processor.encode(texts=data1)
     print(f"Token ids are: {token_ids1}")
-    gqa = GQA(d_model=512, query_head=8, key_head=2)
+    gqa = SlidingWindowAttn(d_model=512, query_head=8, key_head=2)
     context_vector = gqa(token_ids)
     print(f"Context vector: {context_vector}")

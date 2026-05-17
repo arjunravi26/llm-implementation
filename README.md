@@ -1,4 +1,4 @@
-# 🧠 LLM Implementation from Scratch
+# LLM Implementation from Scratch
 
 > A ground-up PyTorch implementation of the core building blocks that power modern Large Language Models — tokenizers, attention mechanisms, and text processing utilities — built for deep understanding, not abstraction.
 

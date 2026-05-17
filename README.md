@@ -372,36 +372,19 @@ print(bpe.tokenize("hello world"))
 
 ---
 
-## 🧩 What's Next (Potential Extensions)
-
-- [ ] **Causal masking** — add upper-triangular `-inf` mask to `attn.py` and `mha.py` for autoregressive decoding
-- [ ] **Rotary Position Embeddings (RoPE)** — the positional encoding used in LLaMA/Mistral/Qwen
-- [ ] **Flash Attention** — chunk-based O(1) memory attention using the online softmax trick
-- [ ] **FFN / SwiGLU** — feed-forward block with gated linear units as used in modern LLMs
-- [ ] **Transformer block** — compose `LayerNorm → MHA → FFN` with residual connections
-- [ ] **KV Cache** — stateful incremental decoding cache for autoregressive generation
-- [ ] **Tiktoken-compatible BBPE** — add a full vocab file and encode/decode integer IDs
 
 ---
 
 ## 🔗 References
 
 - [Attention Is All You Need](https://arxiv.org/abs/1706.03762) — Vaswani et al. (2017)
-- [Neural Machine Translation of Rare Words with Subword Units](https://arxiv.org/abs/1508.07909) — Sennrich et al. (BPE, 2016)
-- [Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) — Radford et al. (GPT-2 / BBPE, 2019)
 - [GQA: Training Generalized Multi-Query Transformer Models](https://arxiv.org/abs/2305.13245) — Ainslie et al. (2023)
-- [Mistral 7B](https://arxiv.org/abs/2310.06825) — Jiang et al. (Sliding Window Attention, 2023)
-- [Andrej Karpathy's minbpe](https://github.com/karpathy/minbpe) — Reference implementation for BPE
-
 ---
 
 ## 👤 Author
 
 **Arjun Ravi**
-AI Engineer @ trivoxlabs | specializing in SLMs, local LLM inference, and document extraction pipelines.
-
-- GitHub: [@arjunravi26](https://github.com/arjunravi26)
-- LeetCode: [arjunravi726](https://leetcode.com/arjunravi726)
+AI Engineer | specializing in LLM, SLMs, local LLM inference, and document extraction pipelines
 
 ---
 

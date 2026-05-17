@@ -37,7 +37,7 @@ llm-implementation/
 │   ├── text_processing.py       # Vocab builder + encode/pad pipeline (nn.Dataset)
 │   └── sample.py                # UTF-8 byte encoding demo (Devanagari script)
 │
-└── sample.py                    # Standalone, annotated BPE walkthrough
+
 ```
 
 ---
